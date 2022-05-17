@@ -38,4 +38,12 @@ public class CourierClient extends RestAssuredClient {
                .then();
    }
 
+    @Step("Send DELETE request to /api/v1/courier/:id without id")
+    public ValidatableResponse deleteDeleteWithoutId() {
+        return given()
+                .spec(getBaseSpec())
+                .when()
+                .delete(COURIER_PATH)
+                .then();
+    }
 }

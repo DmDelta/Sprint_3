@@ -8,12 +8,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertTrue;
 
 public class CourierTest {
 
     private CourierClient courierClient;
+    Courier courier = Courier.getRandom();
     public int courierId;
 
     @Before
@@ -24,6 +27,8 @@ public class CourierTest {
 
     @After
     public void tearDown() { // почистить после теста
+        ValidatableResponse validatableResponse = courierClient.login(new CourierCredentials(courier.login, courier.password));
+        courierId = validatableResponse.extract().path("id");
         courierClient.delete(courierId);
     }
 

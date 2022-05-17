@@ -23,6 +23,8 @@ public class CourierLoginTest {
 
     @After
     public void tearDown() {
+        ValidatableResponse validatableResponse = courierClient.login(new CourierCredentials(courier.login, courier.password));
+        courierId = validatableResponse.extract().path("id");
         courierClient.delete(courierId);
     }
 
@@ -33,7 +35,7 @@ public class CourierLoginTest {
         courierClient.create(courier);
 
         ValidatableResponse validatableResponse = courierClient.login(new CourierCredentials(courier.login, courier.password));
-        courierId = validatableResponse.extract().path("id");
+       courierId = validatableResponse.extract().path("id");
 
         assertThat("Courier ID incorrect",courierId, is(not(0)));
         validatableResponse.assertThat().statusCode(200);
@@ -42,11 +44,10 @@ public class CourierLoginTest {
     @Test
     @DisplayName("Проверить, что курьер не может авторизоваться без логина")
     @Description("Тест  /api/v1/courier/login")
-    public void checkCourierLoginWithoutUserName(){
+    public void checkCourierLoginWithoutLogin(){
         courierClient.create(courier);
 
         ValidatableResponse validatableResponse = courierClient.login(new CourierCredentials("", courier.password));
-
         validatableResponse.assertThat().statusCode(400);
         validatableResponse.assertThat().body("message", equalTo("Недостаточно данных для входа"));
     }
